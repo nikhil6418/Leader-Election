@@ -1,0 +1,213 @@
+<html>
+ <head>
+  <title>Leader Election</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body{
+      box-sizing: border-box;
+      background-color: #F0F0F0;
+    }
+    
+    /* Create three equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 50%;
+      padding: 10px;
+      height: 300px; /* Should be removed. Only for demonstration */
+    }
+    
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .txt1{
+        display: inline-block;
+        width: 40%;
+    }
+
+    .but1{
+        margin-right: 5%;
+    }
+
+    .but2{
+        margin-left: 5%;
+    }
+    #myUL1{
+        padding-left: 12%;
+        margin-top: 10px;
+        margin-bottom:10px;
+
+
+    }
+    #myUL2{
+        padding-left: 10%;
+        margin-top: 10px;
+        margin-bottom:10px;
+        
+    }
+    .dbox{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        
+    }
+    </style>
+ </head>
+ <body>
+    <div id="myDIV" >
+        <h2 style="margin:5px"><center>Add Leader</center></h2>
+        <input type="text" style="margin-left:40%;background-color: white;" id="myInput" placeholder="LeaderName" ></input>
+        <button onclick="newElement()">Add</button>
+    </div>
+
+    <div class="row">
+        <div class="column" id="myUL1">
+        
+        </div>
+        <div class="column"  id="myUL2">
+         
+
+        </div>
+        
+      </div>
+
+
+
+ </body>
+    
+
+</html>
+<script>
+    function newElement() {
+
+        var inputValue = document.getElementById("myInput").value;
+        var di = document.createElement("div");
+        di.id="p1"+inputValue;
+        di.classList.add("dbox");
+        var fi = document.createElement("div");
+        fi.id="p2"+inputValue;
+        fi.classList.add("dbox");
+        
+        
+        var t1 = document.createElement("span");
+        t1.innerHTML=inputValue;
+        t1.classList.add("txt1");
+        di.appendChild(t1);
+        var t2 = document.createElement("span");
+        t2.innerHTML=inputValue;
+        t2.classList.add("txt1");
+        fi.appendChild(t2);
+    
+        
+        var btn1 = document.createElement("BUTTON");
+        btn1.classList.add("fa");
+        btn1.classList.add("fa-minus");
+        btn1.classList.add("but1");
+        btn1.id="d1"+inputValue;           
+        btn1.onclick = decVote;
+        di.appendChild(btn1);
+        var btn2 = document.createElement("BUTTON");
+        btn2.classList.add("fa");
+        btn2.classList.add("fa-minus");
+        btn2.classList.add("but1");
+        btn2.id="d2"+inputValue;           
+        btn2.onclick = decVote;
+        fi.appendChild(btn2);
+
+        
+
+        // t = document.createTextNode(0);
+        t1 = document.createElement("span");
+        t1.innerHTML=0;
+        t1.id="1"+inputValue;
+        t1.classList.add("txt2");
+        di.appendChild(t1);
+        t2 = document.createElement("span");
+        t2.innerHTML=0;
+        t2.id="2"+inputValue;
+        t2.classList.add("txt2");
+        fi.appendChild(t2);
+
+        btn1 = document.createElement("BUTTON");
+        btn1.classList.add("fa");
+        btn1.classList.add("fa-plus");
+        btn1.classList.add("but2");
+        btn1.id="i1"+inputValue;
+        btn1.onclick = incVote;
+        di.appendChild(btn1);
+        btn2 = document.createElement("BUTTON");
+        btn2.classList.add("fa");
+        btn2.classList.add("fa-plus");
+        btn2.classList.add("but2");
+        btn2.id="i2"+inputValue;
+        btn2.onclick = incVote;
+        fi.appendChild(btn2);
+        
+    
+
+        
+        if (inputValue === '') {
+          alert("You must write something!");
+        } else {
+          document.getElementById("myUL1").appendChild(di);
+          document.getElementById("myUL2").appendChild(fi);
+        }
+        
+        document.getElementById("myInput").value = "";
+
+      }
+
+      function decVote(e){
+          var vid =this.id.substr(2,this.id.length-1); 
+          var vote = parseInt(document.getElementById("1"+vid).innerHTML);
+          if(vote>= 1){
+            document.getElementById("1"+vid).innerHTML = "" + (vote-1);
+            document.getElementById("2"+vid).innerHTML = "" + (vote-1);
+          }
+
+          var len = document.getElementById("myUL1").childElementCount;
+          var nodes = document.getElementById("myUL1").childNodes;
+          var vnodes = document.getElementById("myUL2").childNodes;
+          for (var i = 1; i <= len; i++){
+            for (var j = 1; j <= len-i; j++) {
+                if (parseInt(nodes[j].childNodes[2].innerHTML) < parseInt(nodes[j+1].childNodes[2].innerHTML))  {
+                    document.getElementById("myUL1").insertBefore(nodes[j+1],nodes[j]);
+                    document.getElementById("myUL2").insertBefore(vnodes[j+1],vnodes[j]);
+                    nodes = document.getElementById("myUL1").childNodes;
+                    vnodes = document.getElementById("myUL2").childNodes;        
+                }
+
+            }
+
+          } 
+
+
+      }
+
+      function incVote(e){
+          var vid =this.id.substr(2,this.id.length-1); 
+          var vote = parseInt(document.getElementById("1"+vid).innerHTML);
+          document.getElementById("1"+vid).innerHTML = "" + (vote+1);
+          document.getElementById("2"+vid).innerHTML = "" + (vote+1);
+          var len = document.getElementById("myUL1").childElementCount;
+          var nodes = document.getElementById("myUL1").childNodes;
+          var vnodes = document.getElementById("myUL2").childNodes;
+          for (var i = 1; i <= len; i++){
+            for (var j = 1; j <= len-i; j++) {
+                if (parseInt(nodes[j].childNodes[2].innerHTML) < parseInt(nodes[j+1].childNodes[2].innerHTML))  {
+                    document.getElementById("myUL1").insertBefore(nodes[j+1],nodes[j]);
+                    document.getElementById("myUL2").insertBefore(vnodes[j+1],vnodes[j]);
+                    nodes = document.getElementById("myUL1").childNodes;
+                    vnodes = document.getElementById("myUL2").childNodes;        
+                }
+
+            }
+
+          }      
+          
+      }
+      </script>
