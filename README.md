@@ -8,5 +8,5 @@ The application contains two such lists both reflecting the same list and any ch
 
 [Demo](https://assignment20.herokuapp.com/)
 
-## Candidate DashBoard
+
 <img src="l1.JPG">
